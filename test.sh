@@ -30,6 +30,15 @@ function writeFile()
 {
     dd if=/dev/zero of=mnt/.test conv=notrunc oflag=append bs=1M count=$@ >& /dev/null
 }
+function writeFileWithManagement()
+{
+    LD_PRELOAD="$LIB" dd if=/dev/zero of=mnt/.test conv=notrunc oflag=append bs=1M count=$@ >& /dev/null &
+    sleep 1
+}
+function writerPid()
+{
+    lsof -n mnt/.test | awk '/^dd / {print $2}'
+}
 function assert()
 {
     echo Failed
@@ -44,8 +53,8 @@ function main()
     writeFile 1 || assert
     writeFile 20 && assert # must fail
 
-    LD_PRELOAD="$LIB" writeFile 1 >& /dev/null &
-    local pid=$(lsof -n mnt/.test | awk '/^dd / {print $2}')
+    writeFileWithManagement 1
+    pid=$(writerPid)
     test -n "$pid" || assert
     grep -q $'^State:\tT (stopped)$' /proc/$pid/status || assert # linux only
     ps u $pid >& /dev/null || assert
