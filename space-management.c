@@ -15,7 +15,6 @@ struct Options
     int verbose;
 } options = {
     .retries = (size_t)-1,
-    .verbose = 0,
 };
 
 #define vPrintf(...) do {                               \
