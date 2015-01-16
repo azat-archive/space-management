@@ -1,10 +1,4 @@
 *.[ao]
-*.ko
-*.mod
-*.cmd
+*.so
 *.swp
-modules.order
-*.symvers
-*.mod.*
-*.dwo
 /test

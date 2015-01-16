@@ -15,7 +15,3 @@ is -- no), or you ould even copy files into another server (if current don't
 have free space), and create pipes that will read files from remote server
 on fly.
 But sure sort can't do such things for you, but you could!
-
-TODO
-====
-- options
