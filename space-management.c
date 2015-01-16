@@ -12,12 +12,10 @@ struct Options
     size_t retries;
     size_t retried;
 
-    int initialized;
     int verbose;
 } options = {
     .retries = (size_t)-1,
     .verbose = 0,
-    .initialized = 0,
 };
 
 #define vPrintf(...) do {                               \
@@ -34,11 +32,10 @@ struct Options
 
 static ssize_t (*write_orig)(int fd, const void *buf, size_t count) = NULL;
 
-static void write_init()
+__attribute__((constructor)) static void write_init(void)
 {
     write_orig = dlsym(RTLD_NEXT, "write");
     vPrintf("initialized\n");
-    options.initialized = 1;
 
     if (getenv("SPACE_MANAGEMENT_VERBOSE")) {
         ++options.verbose;
@@ -55,10 +52,6 @@ static void write_init()
 ssize_t write(int fd, const void *buf, size_t count)
 {
     ssize_t ret;
-
-    if (!options.initialized) {
-        write_init();
-    }
 
     for (;;) {
         ret = write_orig(fd, buf, count);
