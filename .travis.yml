@@ -6,7 +6,7 @@ compiler:
     - gcc
 
 before_script:
-    - sudo apt-get install awk make
+    - sudo apt-get install gawk make
     # Version of some utils
     - bash --version
     - awk --version
