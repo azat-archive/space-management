@@ -12,7 +12,7 @@ function mkcd()
 }
 function allocFs()
 {
-    fallocate -l10M img
+    dd if=/dev/zero of=img bs=1M count=10
     mkfs -q -text4 img
     sudo losetup --find --show img
 }
