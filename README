@@ -1,0 +1,21 @@
+space-management
+================
+
+Send SIGSTOP to the process that got ENOSPC on write(2).
+
+This is useful if you don't have access to program sources but program don't
+bother it for handle ENOSPC correctly, when it can do some reclaim.
+
+The great example is sort(1), when you use it for large amount of data you
+could forgot to monitor available space on --temporary-directory, and it could
+fail even if it is already sort 99% of data. What you could to is move some
+files into another partition and create symbolic links into the old location
+(but only if sort(1) don't hold that file descriptors, but usually the answer
+is -- no), or you ould even copy files into another server (if current don't
+have free space), and create pipes that will read files from remote server
+on fly.
+But sure sort can't do such things for you, but you could!
+
+TODO
+====
+- options
