@@ -1,0 +1,23 @@
+git:
+   depth: 16777215
+language: c
+
+compiler:
+    - gcc
+
+before_script:
+    - sudo apt-get install awk make
+    # Version of some utils
+    - bash --version
+    - awk --version
+    - dd --version
+    - make --version
+
+script:
+    - make
+    - make test
+
+branches:
+    only:
+        - master
+
