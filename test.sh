@@ -2,7 +2,7 @@
 
 SELF=$(readlink -f $(dirname $0))
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
-LIB="$SELF/space-management.so"
+LIB=${1:-"$SELF/space-management.so"}
 
 trap 'umountFs' EXIT
 
