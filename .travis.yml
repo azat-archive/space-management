@@ -6,16 +6,18 @@ compiler:
     - gcc
 
 before_script:
-    - sudo apt-get install gawk make
+    - sudo apt-get install gawk make cmake
     # Version of some utils
     - bash --version
     - awk --version
     - dd --version
     - make --version
+    - cmake --version
 
 script:
-    - make
-    - make test
+    - cmake .
+    - make VERBOSE=1
+    - make runtests VERBOSE=1
 
 branches:
     only:
