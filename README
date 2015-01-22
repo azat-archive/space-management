@@ -15,3 +15,24 @@ is -- no), or you ould even copy files into another server (if current don't
 have free space), and create pipes that will read files from remote server
 on fly.
 But sure sort can't do such things for you, but you could!
+
+environment
+-----------
+
+- SPACE_MANAGEMENT_VERBOSE
+  Make library more verbose
+
+- SPACE_MANAGEMENT_RETRIES
+  Number of retries for repeated ENOSPC
+
+- SPACE_MANAGEMENT_MONITOR
+  Activate monitoring for fs (in a separate thread)
+
+- SPACE_MANAGEMENT_MONITOR_INTERVAL
+  Interval between monitor checks (in seconds for now)
+
+- SPACE_MANAGEMENT_MONITOR_MAX
+  Maximum of used space for fs
+
+- SPACE_MANAGEMENT_MONITOR_MNT
+  Fs to monitor
