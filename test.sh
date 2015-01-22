@@ -44,21 +44,64 @@ function assert()
     echo Failed
     exit 6 # ABRT
 }
+function writerExist()
+{
+    pid=$(writerPid)
+    test -n "$pid" || return 1
+    grep -q $'^State:\tT (stopped)$' /proc/$pid/status || return 1 # linux only
+    ps u $pid >& /dev/null || return 1
+}
+
+function basicTest()
+{
+    mountFs
+    writeFile 1 || return 1
+    writeFile 20 && return 1 # must fail
+
+    writeFileWithManagement 1
+    writerExist && kill -9 $pid
+}
+function noRetriesTest()
+{
+    SPACE_MANAGEMENT_RETRIES=0 basicTest && assert # must fail
+}
+function monitorTest()
+{
+    mountFs
+    writeFile 1 || return 1
+
+    SPACE_MANAGEMENT_MONITOR= SPACE_MANAGEMENT_MONITOR_MAX=1 writeFileWithManagement 1
+    writerExist
+    kill -9 $pid
+}
+function noMonitorTest()
+{
+    mountFs
+    writeFile 1 || return 1
+
+    writeFileWithManagement 1
+    writerExist && assert # must fail
+}
+
+function runTest()
+{
+    local ret
+
+    echo ========== $@ ==========
+    $@ && ret=0 || ret=1
+    umountFs
+
+    return $ret
+}
 
 function main()
 {
     mkcd test
 
-    mountFs
-    writeFile 1 || assert
-    writeFile 20 && assert # must fail
-
-    writeFileWithManagement 1
-    pid=$(writerPid)
-    test -n "$pid" || assert
-    grep -q $'^State:\tT (stopped)$' /proc/$pid/status || assert # linux only
-    ps u $pid >& /dev/null || assert
-    kill -9 $pid
+    runTest basicTest
+    runTest noRetriesTest
+    runTest monitorTest
+    runTest noMonitorTest
 }
 
 main
