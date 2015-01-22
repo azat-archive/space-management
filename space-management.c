@@ -30,11 +30,13 @@ struct Options
 #endif
 } options = {
     .retries = (size_t)-1,
+#ifdef SM_MONITOR
     .m = {
         .interval = 10,
         .max = 90,
         .mnt = "/",
     },
+#endif
 };
 
 #define vPrintf(...) do {                               \
