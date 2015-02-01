@@ -36,3 +36,9 @@ environment
 
 - SPACE_MANAGEMENT_MONITOR_MNT
   Fs to monitor
+
+testing
+-------
+
+- make runtests
+- make runtests-loop
