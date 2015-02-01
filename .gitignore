@@ -1,7 +1,7 @@
 *.[ao]
 *.so
 *.swp
-/test
+test
 CMakeFiles
 CMakeCache.txt
 Makefile
