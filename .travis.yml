@@ -5,20 +5,23 @@ language: c
 compiler:
     - gcc
 
+install:
+    - sudo apt-get install gawk make cmake libfuse-dev fuse user-mode-linux
+    - sudo mknod /dev/fuse c 10 229
+    - sudo chmod 666 /dev/fuse
+    - cmake .
+    - make VERBOSE=1
+
 before_script:
-    - sudo apt-get install gawk make cmake libfuse-dev fuse
     # Version of some utils
     - bash --version
     - awk --version
     - dd --version
     - make --version
     - cmake --version
-    - sudo modprobe fuse
 
 script:
-    - cmake .
-    - make VERBOSE=1
-    - make runtests VERBOSE=1
+   - ./umltest.sh
 
 branches:
     only:
