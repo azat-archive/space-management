@@ -37,6 +37,13 @@ environment
 - SPACE_MANAGEMENT_MONITOR_MNT
   Fs to monitor
 
+compile
+-------
+
+- mkdir .cmake && cd .cmake
+- cmake ..
+- make
+
 testing
 -------
 
