@@ -98,7 +98,7 @@ function runTest()
 
     echo ========== $@ ==========
     $@ && ret=0 || ret=1
-    umountFs
+    umountFs || assert
 
     return $ret
 }
