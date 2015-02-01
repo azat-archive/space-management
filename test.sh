@@ -4,6 +4,7 @@ SELF=$(readlink -f $(dirname $0))
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 LIB=${1:-"$SELF/space-management.so"}
 FUSE=${2:-"$SELF/fusefs"}
+FAILED=0
 
 trap 'umountFs' EXIT
 
@@ -100,6 +101,11 @@ function runTest()
     $@ && ret=0 || ret=1
     umountFs || assert
 
+    if [ $ret -eq 1 ]; then
+        echo $'\t[FAILED]'
+        let ++FAILED
+    fi
+
     return $ret
 }
 
@@ -111,7 +117,14 @@ function main()
     runTest noRetriesTest
     runTest monitorTest
     runTest noMonitorTest
+
+    if [ $FAILED -gt 0 ]; then
+        echo "Failed: $FAILED (tests)"
+        exit 1
+    else
+        echo Passed
+        exit 0
+    fi
 }
 
 main
-echo Passed
