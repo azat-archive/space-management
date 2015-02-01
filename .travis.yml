@@ -13,6 +13,7 @@ before_script:
     - dd --version
     - make --version
     - cmake --version
+    - sudo modprobe fuse
 
 script:
     - cmake .
