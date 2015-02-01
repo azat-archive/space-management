@@ -155,9 +155,9 @@ static int empty_write(const char *path, const char *buf, size_t size, off_t off
 
     if (!offset) {
         f->size = size;
-    }
-    if (offset > f->size) {
-        f->size += (size - offset);
+    } else if ((offset + size) > f->size) {
+        f->size -= offset;
+        f->size += size;
     }
     return size;
 }
