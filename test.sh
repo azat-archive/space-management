@@ -3,6 +3,7 @@
 SELF=$(readlink -f $(dirname $0))
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 LIB=${1:-"$SELF/space-management.so"}
+FUSE=${2:-"$SELF/fusefs"}
 
 trap 'umountFs' EXIT
 
@@ -10,21 +11,14 @@ function mkcd()
 {
     mkdir -p $@ && cd $1
 }
-function allocFs()
-{
-    dd if=/dev/zero of=img bs=1M count=10
-    mkfs -q -text4 img
-    sudo losetup --find --show img
-}
 function mountFs()
 {
     mkdir -p mnt
-    sudo mount $(allocFs) mnt
-    sudo chown -R $USER:$USER mnt
+    $FUSE mnt
 }
 function umountFs()
 {
-    sudo umount mnt >& /dev/null
+    fusermount -zu mnt
 }
 function writeFile()
 {

@@ -28,4 +28,5 @@ endif()
 
 set(SM_TEST ${CMAKE_SOURCE_DIR}/test.sh)
 set(SM_LIBRARY_PATH ${CMAKE_BINARY_DIR}/libspace-management.so)
-add_custom_target(runtests COMMAND ${SM_TEST} ${SM_LIBRARY_PATH})
+set(SM_FUSEFS ${CMAKE_BINARY_DIR}/fusefs)
+add_custom_target(runtests COMMAND ${SM_TEST} ${SM_LIBRARY_PATH} ${SM_FUSEFS})
