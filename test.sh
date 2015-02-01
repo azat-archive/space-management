@@ -11,14 +11,29 @@ function mkcd()
 {
     mkdir -p $@ && cd $1
 }
+function allocExt4Fs()
+{
+    dd if=/dev/zero of=img bs=1M count=10
+    mkfs -q -text4 img
+    sudo losetup --find --show img
+}
 function mountFs()
 {
     mkdir -p mnt
-    $FUSE mnt
+    if [ "$FUSE" = "loop" ]; then
+        sudo mount $(allocExt4Fs) mnt
+        sudo chown -R $USER:$USER mnt
+    else
+        $FUSE mnt
+    fi
 }
 function umountFs()
 {
-    fusermount -zu mnt
+    if [ "$FUSE" = "loop" ]; then
+        sudo umount mnt >& /dev/null
+    else
+        fusermount -zu mnt
+    fi
 }
 function writeFile()
 {
