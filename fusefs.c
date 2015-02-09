@@ -13,6 +13,18 @@
 #include <limits.h>
 #include <sys/queue.h>
 
+static struct elimits
+{
+    size_t max;
+    size_t cur;
+};
+static struct eoptions
+{
+    struct elimits write;
+} options = {
+    { (size_t)-1 },
+};
+
 LIST_HEAD(efiles_head_t, efile) efiles_head;
 struct efile
 {
@@ -127,7 +139,7 @@ static int empty_read(const char *path, char *buf, size_t size, off_t offset,
 {
     (void)fi;
 
-    struct efile *f = efiles_get(path);;
+    struct efile *f = efiles_get(path);
     if (!f) {
         return -ENOENT;
     }
@@ -148,10 +160,18 @@ static int empty_write(const char *path, const char *buf, size_t size, off_t off
 {
     (void)fi;
 
-    struct efile *f = efiles_get(path);;
+    struct efile *f = efiles_get(path);
     if (!f) {
         return -ENOENT;
     }
+
+    size_t left = options.write.max - options.write.cur;
+    if (!left) {
+        return -ENOSPC;
+    } else if (size > left) {
+        size = left;
+    }
+    options.write.cur += size;
 
     if (!offset) {
         f->size = size;
@@ -172,9 +192,17 @@ static struct fuse_operations empty_ops = {
     .write      = empty_write,
 };
 
+void parse_options()
+{
+    char *max = getenv("EMPTY_FUSEFS_MAX");
+    if (max) {
+        options.write.max = atoll(max);
+    }
+}
 int main(int argc, char **argv)
 {
     int ret;
+    parse_options();
     LIST_INIT(&efiles_head);
     ret = fuse_main(argc, argv, &empty_ops, NULL);
     efiles_free();
