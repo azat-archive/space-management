@@ -181,6 +181,13 @@ static int empty_write(const char *path, const char *buf, size_t size, off_t off
     }
     return size;
 }
+static int empty_statfs(const char *path, struct statvfs *stbuf)
+{
+    stbuf->f_frsize = stbuf->f_bsize = 1 << 12;
+    stbuf->f_bavail = stbuf->f_bfree = (options.write.max - options.write.cur) >> 12;
+    stbuf->f_blocks = options.write.max >> 12;
+    return 0;
+}
 
 static struct fuse_operations empty_ops = {
     .getattr    = empty_getattr,
@@ -190,6 +197,7 @@ static struct fuse_operations empty_ops = {
     .open       = empty_open,
     .read       = empty_read,
     .write      = empty_write,
+    .statfs     = empty_statfs,
 };
 
 void parse_options()
