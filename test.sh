@@ -25,7 +25,7 @@ function mountFs()
         sudo mount $(allocExt4Fs) mnt
         sudo chown -R $USER:$USER mnt
     else
-        $FUSE mnt
+        EMPTY_FUSEFS_MAX=$(( (1<<20) * 20 )) $FUSE mnt
     fi
 }
 function umountFs()
