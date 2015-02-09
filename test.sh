@@ -109,8 +109,16 @@ function runTest()
     return $ret
 }
 
+function prepare()
+{
+    if [ ! "$FUSE" = "loop" ]; then
+        mount -t proc proc /proc
+    fi
+}
+
 function main()
 {
+    prepare
     mkcd test
 
     runTest basicTest
