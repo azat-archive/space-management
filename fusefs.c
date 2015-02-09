@@ -90,6 +90,17 @@ static int empty_getattr(const char *path, struct stat *stbuf)
 
     return res;
 }
+static int empty_truncate(const char *path, off_t off)
+{
+    struct efile *f = efiles_get(path);
+    if (!f) {
+        return -ENOENT;
+    }
+
+    f->size = off;
+    return 0;
+}
+
 static int empty_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
                          off_t offset, struct fuse_file_info *fi)
 {
@@ -191,6 +202,7 @@ static int empty_statfs(const char *path, struct statvfs *stbuf)
 
 static struct fuse_operations empty_ops = {
     .getattr    = empty_getattr,
+    .truncate   = empty_truncate,
     .readdir    = empty_readdir,
     .create     = empty_create,
     .utimens    = empty_utimens,
