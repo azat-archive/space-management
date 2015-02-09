@@ -60,6 +60,7 @@ function writerExist()
     test -n "$pid" || return 1
     grep -q $'^State:\tT (stopped)$' /proc/$pid/status || return 1 # linux only
     ps u $pid >& /dev/null || return 1
+    echo $pid
 }
 
 function basicTest()
@@ -69,7 +70,7 @@ function basicTest()
     writeFile 20 && return 1 # must fail
 
     writeFileWithManagement 1
-    writerExist && kill -9 $pid
+    kill -9 $(writerExist)
 }
 function noRetriesTest()
 {
@@ -81,8 +82,7 @@ function monitorTest()
     writeFile 1 || return 1
 
     SPACE_MANAGEMENT_MONITOR= SPACE_MANAGEMENT_MONITOR_MAX=1 writeFileWithManagement 1
-    writerExist
-    kill -9 $pid
+    kill -9 $(writerExist)
 }
 function noMonitorTest()
 {
@@ -90,7 +90,7 @@ function noMonitorTest()
     writeFile 1 || return 1
 
     writeFileWithManagement 1
-    writerExist && assert || true # must fail
+    writerExist >/dev/null && assert || true # must fail
 }
 
 function runTest()
