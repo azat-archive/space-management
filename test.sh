@@ -90,7 +90,7 @@ function noMonitorTest()
     writeFile 1 || return 1
 
     writeFileWithManagement 1
-    writerExist && assert # must fail
+    writerExist && assert || true # must fail
 }
 
 function runTest()
