@@ -73,7 +73,7 @@ function basicTest()
 }
 function noRetriesTest()
 {
-    SPACE_MANAGEMENT_RETRIES=0 basicTest && assert # must fail
+    SPACE_MANAGEMENT_RETRIES=0 basicTest && assert || true # must fail
 }
 function monitorTest()
 {
