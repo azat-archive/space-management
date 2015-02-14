@@ -81,7 +81,7 @@ function monitorTest()
     mountFs
     writeFile 1 || return 1
 
-    SPACE_MANAGEMENT_MONITOR= SPACE_MANAGEMENT_MONITOR_MAX=1 writeFileWithManagement 1
+    SPACE_MANAGEMENT_MONITOR= SPACE_MANAGEMENT_MONITOR_MAX=1 SPACE_MANAGEMENT_MONITOR_MNT=mnt/.test writeFileWithManagement 1
     kill -9 $(writerExist)
 }
 function noMonitorTest()
