@@ -184,11 +184,9 @@ static int empty_write(const char *path, const char *buf, size_t size, off_t off
     }
     options.write.cur += size;
 
-    if (!offset) {
-        f->size = size;
-    } else if ((offset + size) > f->size) {
-        f->size -= offset;
-        f->size += size;
+    size_t total = size + offset;
+    if (total > f->size) {
+        f->size = total;
     }
     return size;
 }
