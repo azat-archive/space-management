@@ -50,6 +50,12 @@ compile
 - cmake ..
 - make
 
+examples:
+---------
+
+- LD_PRELOAD=libspace-management.so sort -T/sort/tmp unsorted -o sorted
+- SPACE_MANAGEMENT_MONITOR= SPACE_MANAGEMENT_MONITOR_MAX=90 SPACE_MANAGEMENT_MONITOR_MNT=/sort/tmp LD_PRELOAD=libspace-management.so sort -T/sort/tmp unsorted -o sorted
+
 testing
 -------
 
