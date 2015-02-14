@@ -61,3 +61,39 @@ testing
 
 - make runtests
 - make runtests-loop
+
+testing notes:
+--------------
+
+- monitorTest is racy:
+  Failed:
+  -------
+  monThr:                         mainThr:
+                                    write()
+    statfs()
+    if (tooMuch) {
+        stop;
+    }
+
+  Failed:
+  -------
+  monThr:                         mainThr:
+    statfs()
+                                    write()
+    if (tooMuch) {
+        stop;
+    }
+
+  Success:
+  -------
+  monThr:                         mainThr:
+    statfs()
+    if (tooMuch) {
+        stop;
+                                    write()
+    }
+
+  But I don't want to bother code with syncing for this test (since in
+  production monitor is not that prevent the first write, it must be used
+  when you want to check fs in background -- for example if this process
+  not the only one who writes to that mount point).
