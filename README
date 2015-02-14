@@ -28,6 +28,12 @@ environment
 - SPACE_MANAGEMENT_MONITOR
   Activate monitoring for fs (in a separate thread)
 
+  Use this if the process that runned with preloaded this library is not the
+  only one who writes to SPACE_MANAGEMENT_MONITOR_MNT.
+
+  Available only when SM_MONITOR enabled.
+  IOW you could compile space-management without it, to avoid linking with pthread.
+
 - SPACE_MANAGEMENT_MONITOR_INTERVAL
   Interval between monitor checks (in seconds for now)
 
